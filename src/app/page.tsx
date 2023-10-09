@@ -15,13 +15,23 @@ import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import userIcon from "../../public/user.png";
 import botIcon from "../../public/bot.png";
 import { useChat } from "ai/react";
-import { useRef } from 'react'
+import { useRef, useEffect } from 'react'
 
 export default function Home() {
 
-  const dialogElement = useRef(null)
+  const dialogElement = useRef<HTMLDivElement>(null)
 
+  
   const { messages, input, handleInputChange, handleSubmit } = useChat({});
+
+  const scrollToBottom = () => {
+    const chatContainer = dialogElement.current!
+    chatContainer.scrollTop = chatContainer?.scrollHeight 
+  }
+  
+  useEffect(()=>{
+    scrollToBottom()
+  }, [messages] )
 
   return (
     <div className="flex items-center justify-center h-screen bg-slate-50">
@@ -30,7 +40,7 @@ export default function Home() {
           <CardTitle>Fale Conosco</CardTitle>
           <CardDescription>Como podemos ajudar?</CardDescription>
         </CardHeader>
-        <CardContent ref={dialogElement} className="space-y-4 overflow-y-scroll">
+        <CardContent ref={dialogElement} className="space-y-4 overflow-y-scroll scrollable">
           {messages.map((message) => {
             return (
               <div
